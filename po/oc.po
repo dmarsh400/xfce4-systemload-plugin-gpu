@@ -5,14 +5,14 @@
 # Translators:
 # Cédric Valmary <cvalmary@yahoo.fr>, 2016
 # Cédric Valmary <cvalmary@yahoo.fr>, 2013
-# Quentin PAGÈS, 2022,2025
+# Quentin PAGÈS, 2022,2025-2026
 msgid ""
 msgstr ""
 "Project-Id-Version: Xfce Panel Plugins\n"
 "Report-Msgid-Bugs-To: https://gitlab.xfce.org/\n"
-"POT-Creation-Date: 2025-05-26 00:51+0200\n"
+"POT-Creation-Date: 2026-02-16 12:59+0100\n"
 "PO-Revision-Date: 2013-07-03 19:20+0000\n"
-"Last-Translator: Quentin PAGÈS, 2022,2025\n"
+"Last-Translator: Quentin PAGÈS, 2022,2025-2026\n"
 "Language-Team: Occitan (post 1500) (http://app.transifex.com/xfce/xfce-panel-plugins/language/oc/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,135 +20,139 @@ msgstr ""
 "Language: oc\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: panel-plugin/cpu.cc:59
+#: panel-plugin/cpu.cc:55
 msgid "File /proc/stat not found!"
 msgstr "Fichièr /proc/stat pas trobat !"
 
-#: panel-plugin/systemload.cc:233
+#: panel-plugin/systemload.cc:231
 #, c-format
 msgid "System Load: %ld%%"
 msgstr "Carga del sistèma : %ld%%"
 
-#: panel-plugin/systemload.cc:240
+#: panel-plugin/systemload.cc:238
 #, c-format
 msgid "Memory: %ldMB of %ldMB used"
 msgstr "Memòria : %ldMio de %ldMio utilizat"
 
-#: panel-plugin/systemload.cc:247
+#: panel-plugin/systemload.cc:245
 #, c-format
 msgid "Network: %ld Mbit/s"
 msgstr "Ret : %ld Mbit/s"
 
-#: panel-plugin/systemload.cc:256
+#: panel-plugin/systemload.cc:254
 #, c-format
 msgid "Swap: %ldMB of %ldMB used"
 msgstr "Fichièr d'escambi : %ldMio de %ldMio utilizat"
 
-#: panel-plugin/systemload.cc:258
+#: panel-plugin/systemload.cc:256
 msgid "No swap"
 msgstr "Pas cap de fichièr d'escambi"
 
 #. Tooltip text
-#: panel-plugin/systemload.cc:284
+#: panel-plugin/systemload.cc:282
 #, c-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d Jorn"
 msgstr[1] "%d Jorns"
 
-#: panel-plugin/systemload.cc:285
+#: panel-plugin/systemload.cc:283
 #, c-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] "%d ora"
 msgstr[1] "%d oras"
 
-#: panel-plugin/systemload.cc:286
+#: panel-plugin/systemload.cc:284
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] "%d minuta"
 msgstr[1] "%d minutas"
 
-#: panel-plugin/systemload.cc:288
+#: panel-plugin/systemload.cc:286
 #, c-format
 msgid "Uptime: %s, %s, %s"
 msgstr "Durada en foncion : %s, %s, %s"
 
-#: panel-plugin/systemload.cc:721
+#: panel-plugin/systemload.cc:718
 msgid "Label:"
 msgstr "Etiqueta :"
 
-#: panel-plugin/systemload.cc:731
+#: panel-plugin/systemload.cc:728
 msgid "Leave empty to disable the label"
 msgstr "Daissar void per desactivar l’etiqueta"
 
-#: panel-plugin/systemload.cc:733
+#: panel-plugin/systemload.cc:730
 msgid "Use percent-formatting to format the time (see help page for details)."
 msgstr "Utilizatz lo formatatge amb percentatge per formatar l'ora (vejatz la pagina d'ajuda per mai de detalhs)."
 
-#: panel-plugin/systemload.cc:768
+#: panel-plugin/systemload.cc:765
 msgid "CPU monitor"
 msgstr "Monitor del CPU"
 
-#: panel-plugin/systemload.cc:769
+#: panel-plugin/systemload.cc:766
 msgid "Memory monitor"
 msgstr "Monitor de la memòria"
 
-#: panel-plugin/systemload.cc:770
+#: panel-plugin/systemload.cc:767
 msgid "Network monitor"
 msgstr "Monitor ret"
 
-#: panel-plugin/systemload.cc:771
+#: panel-plugin/systemload.cc:768
 msgid "Swap monitor"
 msgstr "Monitor del fichièr d'escambi"
 
-#: panel-plugin/systemload.cc:772
+#: panel-plugin/systemload.cc:769
 msgid "Uptime monitor"
 msgstr "Monitor del temps de foncionament"
 
-#: panel-plugin/systemload.cc:784 panel-plugin/systemload.desktop.in:5
+#: panel-plugin/systemload.cc:785 panel-plugin/systemload.desktop.in:5
 msgid "System Load Monitor"
 msgstr "Monitor de la carga del sistèma"
 
-#: panel-plugin/systemload.cc:787
+#: panel-plugin/systemload.cc:788
 msgid "_Close"
 msgstr "_Tampar"
 
-#: panel-plugin/systemload.cc:788
+#: panel-plugin/systemload.cc:789
 msgid "_Help"
 msgstr "_Ajuda"
 
-#: panel-plugin/systemload.cc:806
+#: panel-plugin/systemload.cc:808
 msgid "<b>General</b>"
 msgstr "<b>General</b>"
 
-#: panel-plugin/systemload.cc:825
+#: panel-plugin/systemload.cc:827
 msgid "Update interval:"
 msgstr "Interval de mesa a jorn :"
 
-#: panel-plugin/systemload.cc:831
+#: panel-plugin/systemload.cc:833
 msgid ""
 "Update interval when running on battery (uses regular update interval if set"
 " to zero)"
 msgstr "Interval d'actualizacion en foncionament sus batariá (utiliza l'interval d'actualizacion normal se definit a zèro)"
 
-#: panel-plugin/systemload.cc:842
+#: panel-plugin/systemload.cc:844
 msgid "Power-saving interval:"
 msgstr "Interval d'estalvi d'energia :"
 
-#: panel-plugin/systemload.cc:849
+#: panel-plugin/systemload.cc:851
 msgid "Launched when clicking on the plugin"
 msgstr "Lançat al clic sus l’empeuton"
 
-#: panel-plugin/systemload.cc:856
+#: panel-plugin/systemload.cc:858
 msgid "System monitor:"
 msgstr "Monitor del sistèma :"
 
-#: panel-plugin/systemload.cc:894 panel-plugin/systemload.desktop.in:6
+#: panel-plugin/systemload.cc:896
 msgid "Monitor CPU load, swap usage and memory footprint"
 msgstr "Monitor de la carga del CPU, utilizacion del fichièr d'escambi e de l'emprencha memòria"
 
-#: panel-plugin/uptime.cc:50
+#: panel-plugin/systemload.desktop.in:6
+msgid "Monitor CPU load, swap usage, memory footprint and network usage"
+msgstr "Susvelhar la carga CPU, l’utilizacion de la memòria d’escambi, l’emprenta memòria e l’utilizacion del ret"
+
+#: panel-plugin/uptime.cc:46
 msgid "File /proc/uptime not found!"
 msgstr "Fichièr /proc/uptime pas trobat !"
