@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <glib.h>
 #include "network.h"
 
 #ifdef HAVE_LIBGTOP
@@ -64,47 +65,41 @@ read_netload_libgtop (gulong *bytes)
 
 #endif
 
-static const char *const PROC_NET_NETSTAT = "/proc/net/netstat";
+static const char *const PROC_NET_DEV = "/proc/net/dev";
+static const char *const REGEX_PATTERN = ".*:\\s*(\\d+)\\s*\\d+\\s*\\d+\\s*\\d+\\s*\\d+\\s*\\d+\\s*\\d+\\s*\\d+\\s*(\\d+)\\s*";
 
 static gint
 read_netload_proc (gulong *bytes)
 {
-    char buf[4*1024];
-    unsigned long long dummy, in_octets, out_octets;
+    gchar *contents;
+    GError *error;
+    GRegex *regex;
+    GMatchInfo *match_info;
 
+    if (g_file_get_contents (PROC_NET_DEV, &contents, NULL, &error) == FALSE)
     {
-        FILE *fd = fopen (PROC_NET_NETSTAT, "r");
-        if (!fd)
-            return -1;
-
-        size_t size = fread (buf, sizeof (*buf), G_N_ELEMENTS (buf) - 1, fd);
-        if (size == 0)
-        {
-            fclose(fd);
-            return -1;
-        }
-        buf[size] = '\0';
-
-        if (fclose (fd) != 0)
-            return -1;
+        g_error ("Failed to read contents of %s: %s.", PROC_NET_DEV, error->message);
+        g_error_free (error);
+        return -1;
     }
 
-    const char *s = buf;
+    *bytes = 0;
+    regex = g_regex_new (REGEX_PATTERN, (GRegexCompileFlags) 0, (GRegexMatchFlags) 0, NULL);
+    g_regex_match (regex, contents, (GRegexMatchFlags) 0, &match_info);
+    while (g_match_info_matches (match_info))
+    {
+        gchar *rx = g_match_info_fetch (match_info, 1);
+        gchar *tx = g_match_info_fetch (match_info, 2);
+        *bytes += g_ascii_strtoll (rx, NULL, 10) + g_ascii_strtoll (tx, NULL, 10);
+        g_free (rx);
+        g_free (tx);
+        g_match_info_next (match_info, NULL);
+    }
 
-    /* Skip first 3 lines */
-    s = strchr(s, '\n'); if (!s) return -1;
-    s++;
-    s = strchr(s, '\n'); if (!s) return -1;
-    s++;
-    s = strchr(s, '\n'); if (!s) return -1;
-    s++;
+    g_match_info_free (match_info);
+    g_regex_unref (regex);
+    g_free (contents);
 
-    if (sscanf (s, "IpExt: %llu %llu %llu %llu %llu %llu %llu %llu",
-                &dummy, &dummy, &dummy, &dummy, &dummy, &dummy,
-                &in_octets, &out_octets) != 8)
-        return -1;
-
-    *bytes = in_octets + out_octets;
     return 0;
 }
 
@@ -136,4 +131,3 @@ read_netload (gulong *net, gulong *NTotal)
 
     return 0;
 }
-
