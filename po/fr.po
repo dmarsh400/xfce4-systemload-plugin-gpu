@@ -10,7 +10,7 @@
 # 9bd356497422d3b951d73481908ce38a_9594f42 <5107b79d5223bd4fa6f541efbd7ae736_103107>, 2014
 # 9bd356497422d3b951d73481908ce38a_9594f42 <5107b79d5223bd4fa6f541efbd7ae736_103107>, 2014
 # Urien Desterres <urien.desterres@gmail.com>, 2014,2018
-# Wallon Wallon, 2023,2025
+# Wallon Wallon, 2023,2025-2026
 # Yannick Le Guen <leguen.yannick@gmail.com>, 2014,2016-2017,2021
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.xfce.org/\n"
 "POT-Creation-Date: 2026-02-16 12:59+0100\n"
 "PO-Revision-Date: 2013-07-03 19:20+0000\n"
-"Last-Translator: jc1 <jc1.quebecos@gmail.com>, 2013,2021,2026\n"
+"Last-Translator: Wallon Wallon, 2023,2025-2026\n"
 "Language-Team: French (http://app.transifex.com/xfce/xfce-panel-plugins/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgstr[2] "%d minutes"
 #: panel-plugin/systemload.cc:286
 #, c-format
 msgid "Uptime: %s, %s, %s"
-msgstr "Temps d’utilisation : %s, %s, %s"
+msgstr "Temps d’utilisation : %s, %s, %s"
 
 #: panel-plugin/systemload.cc:718
 msgid "Label:"
@@ -160,7 +160,7 @@ msgstr "Moniteur de la charge du CPU, utilisation du fichier d’échange et de 
 
 #: panel-plugin/systemload.desktop.in:6
 msgid "Monitor CPU load, swap usage, memory footprint and network usage"
-msgstr "Surveiller la charge du CPU, l'utilisation du swap, l'empreinte mémoire et l'utilisation du réseau"
+msgstr "Surveiller la charge du CPU, l’utilisation du swap, l’empreinte mémoire et l’utilisation du réseau"
 
 #: panel-plugin/uptime.cc:46
 msgid "File /proc/uptime not found!"
