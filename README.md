@@ -72,7 +72,7 @@ BSD-2-Clause (original) + GPL-2.0-or-later (enhancements)
 
 ## Development
 
-This is an enhanced version of the official XFCE system load plugin with integrated GPU monitoring. For a standalone GPU graph plugin, see [xfce4-gpugraph-plugin](https://github.com/moderateb/xfce4-gpugraph-plugin).
+This is an enhanced version of the official XFCE system load plugin with integrated GPU monitoring. For a standalone GPU graph plugin, see [xfce4-gpugraph-plugin](https://github.com/dmarsh400/xfce4-gpugraph-plugin).
 
 ### Homepage
 
