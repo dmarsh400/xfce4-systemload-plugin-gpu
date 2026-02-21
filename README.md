@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-blue.svg)](https://gitlab.xfce.org/panel-plugins/xfce4-systemload-plugin/-/blob/master/COPYING)
 [![License](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://gitlab.xfce.org/panel-plugins/xfce4-systemload-plugin/-/blob/master/COPYING)
 
-# xfce4-systemload-plugin
+# xfce4-systemload-plugin-gpu
 
 xfce4-systemload-plugin displays current CPU load, memory in use, network utilization, swap space, system uptime, and **GPU utilization** in xfce4-panel.
 
@@ -29,7 +29,50 @@ This enhanced version includes integrated GPU monitoring for AMD GPUs using ROCm
 - AMD GPU with ROCm installed
 - `rocm-smi` command available (typically at `/opt/rocm-*/bin/rocm-smi`)
 
-----
+## Installation
+
+From source:
+
+    % cd xfce4-systemload-plugin-gpu
+    % meson setup build
+    % meson compile -C build
+    % meson install -C build
+
+## Usage
+
+1. Add the "System Load Monitor" plugin to your Xfce panel
+2. Right-click the plugin → Properties to configure which monitors to display
+3. Enable GPU0/GPU1 monitoring as desired
+4. Customize colors and labels for each monitor type
+
+## Configuration
+
+- **Monitor Selection**: Enable/disable CPU, Memory, Network, Swap, GPU0, GPU1
+- **Colors**: Customize colors for each monitor type
+- **Labels**: Show/hide text labels for each monitor
+- **Update Interval**: Adjust refresh rate (default: 500ms)
+
+## Requirements
+
+- **Xfce4 panel**
+- **GTK3**
+- **libxfce4panel**
+- **libxfce4ui**
+- **libxfce4util**
+- **xfconf**
+- **AMD GPU + ROCm** (for GPU monitoring)
+
+## Screenshots
+
+*Add screenshots showing the system load plugin with GPU monitoring*
+
+## License
+
+BSD-2-Clause (original) + GPL-2.0-or-later (enhancements)
+
+## Development
+
+This is an enhanced version of the official XFCE system load plugin with integrated GPU monitoring. For a standalone GPU graph plugin, see [xfce4-gpugraph-plugin](https://github.com/moderateb/xfce4-gpugraph-plugin).
 
 ### Homepage
 
