@@ -64,7 +64,10 @@ From source:
 
 ## Screenshots
 
-*Add screenshots showing the system load plugin with GPU monitoring*
+### System Load Monitor with GPU Support
+![Enhanced System Load Monitor](Enchanced%20system%20loadpng)
+
+*Shows the enhanced system load monitor displaying CPU, Memory, Network, Swap, and GPU0/GPU1 utilization with distinct colors for each monitor type.*
 
 ## License
 
