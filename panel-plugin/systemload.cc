@@ -58,6 +58,7 @@
 #include "cpu.h"
 #include "memswap.h"
 #include "network.h"
+#include "gpu.h"
 #include "plugin.h"
 #include "settings.h"
 #include "uptime.h"
@@ -95,7 +96,7 @@ struct t_global_monitor {
     bool              use_timeout_seconds;
     guint             timeout_id;
     t_command         command;
-    t_monitor         *monitor[4];
+    t_monitor         *monitor[6];
     t_uptime_monitor  uptime;
 #ifdef HAVE_UPOWER_GLIB
     UpClient          *upower;
@@ -109,6 +110,8 @@ static const SystemloadMonitor VISUAL_ORDER[] = {
     MEM_MONITOR,
     SWAP_MONITOR,
     NET_MONITOR,
+    GPU0_MONITOR,
+    GPU1_MONITOR,
 };
 
 static gboolean setup_monitor_cb(gpointer user_data);
@@ -210,6 +213,10 @@ update_monitors(t_global_monitor *global)
         if (read_netload (&net, &NTotal) == 0)
             global->monitor[NET_MONITOR]->value_read = net;
     }
+    if (systemload_config_get_enabled (config, GPU0_MONITOR))
+        global->monitor[GPU0_MONITOR]->value_read = read_gpu0load();
+    if (systemload_config_get_enabled (config, GPU1_MONITOR))
+        global->monitor[GPU1_MONITOR]->value_read = read_gpu1load();
     if (systemload_config_get_uptime_enabled (config))
         global->uptime.value_read = read_uptime();
 
@@ -256,6 +263,20 @@ update_monitors(t_global_monitor *global)
             g_snprintf(tooltip, sizeof(tooltip), _("No swap"));
 
         set_tooltip(global->monitor[SWAP_MONITOR]->ebox, tooltip);
+    }
+
+    if (systemload_config_get_enabled (config, GPU0_MONITOR))
+    {
+        gchar tooltip[128];
+        g_snprintf(tooltip, sizeof(tooltip), _("GPU0 Load: %ld%%"), global->monitor[GPU0_MONITOR]->value_read);
+        set_tooltip(global->monitor[GPU0_MONITOR]->ebox, tooltip);
+    }
+
+    if (systemload_config_get_enabled (config, GPU1_MONITOR))
+    {
+        gchar tooltip[128];
+        g_snprintf(tooltip, sizeof(tooltip), _("GPU1 Load: %ld%%"), global->monitor[GPU1_MONITOR]->value_read);
+        set_tooltip(global->monitor[GPU1_MONITOR]->ebox, tooltip);
     }
 
     if (systemload_config_get_uptime_enabled (config))
@@ -407,6 +428,8 @@ monitor_control_new(XfcePanelPlugin *plugin)
 
     for(gsize i = 0; i < G_N_ELEMENTS (global->monitor); i++)
         global->monitor[i] = g_new0 (t_monitor, 1);
+
+    create_monitor (global);
 
     systemload_config_on_change (global->config, setup_monitor_cb, global);
 
@@ -766,13 +789,17 @@ monitor_create_options(XfcePanelPlugin *plugin, t_global_monitor *global)
             N_ ("Memory monitor"),
             N_ ("Network monitor"),
             N_ ("Swap monitor"),
+            N_ ("GPU0 monitor"),
+            N_ ("GPU1 monitor"),
             N_ ("Uptime monitor")
     };
     static const gchar *SETTING_TEXT[] = {
             "cpu",
             "memory",
             "network",
-            "swap"
+            "swap",
+            "gpu0",
+            "gpu1"
     };
 
     GtkWidget *dlg;
@@ -869,7 +896,7 @@ monitor_create_options(XfcePanelPlugin *plugin, t_global_monitor *global)
 
     /* Uptime monitor options */
     new_monitor_setting (global, GTK_GRID(grid), 4 + 2*G_N_ELEMENTS (global->monitor),
-                         _(FRAME_TEXT[4]), FALSE, "uptime");
+                         _(FRAME_TEXT[6]), FALSE, "uptime");
 
     gtk_widget_show_all (dlg);
 }
@@ -899,10 +926,10 @@ monitor_show_about(XfcePanelPlugin *plugin, t_global_monitor *global)
       "authors", auth, NULL);
 }
 
-void
+extern "C" __attribute__((visibility("default"))) void
 systemload_construct (XfcePanelPlugin *plugin)
 {
-    xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
+    // xfce_textdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
 
 #ifdef HAVE_LIBGTOP
     /* Consider add glibtop_close() somewhere */
@@ -911,7 +938,6 @@ systemload_construct (XfcePanelPlugin *plugin)
 
     t_global_monitor *global = monitor_control_new (plugin);
 
-    create_monitor (global);
     monitor_set_mode (plugin, xfce_panel_plugin_get_mode (plugin), global);
 
     setup_monitors (global);

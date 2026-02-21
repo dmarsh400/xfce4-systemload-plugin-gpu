@@ -5,6 +5,8 @@ plugin_sources = [
   'memswap.h',
   'network.cc',
   'network.h',
+  'gpu.cc',
+  'gpu.h',
   'plugin.c',
   'plugin.h',
   'settings.cc',

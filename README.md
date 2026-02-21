@@ -3,7 +3,31 @@
 
 # xfce4-systemload-plugin
 
-xfce4-systemload-plugin displays current CPU load, memory in use, network utilization, swap space, and system uptime in xfce4-panel.
+xfce4-systemload-plugin displays current CPU load, memory in use, network utilization, swap space, system uptime, and **GPU utilization** in xfce4-panel.
+
+## Features
+
+- **CPU Load**: Monitor processor utilization
+- **Memory Usage**: Track RAM consumption
+- **Network Traffic**: Display network I/O rates
+- **Swap Usage**: Monitor swap space utilization
+- **System Uptime**: Show system uptime
+- **GPU Monitoring**: Real-time AMD GPU utilization (GPU0/GPU1) via ROCm
+
+## GPU Support
+
+This enhanced version includes integrated GPU monitoring for AMD GPUs using ROCm:
+
+- **GPU0/GPU1 Support**: Monitor multiple AMD GPUs simultaneously
+- **ROCm Integration**: Uses `rocm-smi --showuse` for accurate readings
+- **Real-time Updates**: Live GPU utilization tracking
+- **Configurable**: Enable/disable individual GPU monitors
+- **Visual Indicators**: Distinct colors for each GPU (GPU0: dark red, GPU1: purple)
+
+### Requirements for GPU Monitoring
+
+- AMD GPU with ROCm installed
+- `rocm-smi` command available (typically at `/opt/rocm-*/bin/rocm-smi`)
 
 ----
 

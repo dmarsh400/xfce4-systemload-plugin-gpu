@@ -49,6 +49,8 @@ static const gchar *const DEFAULT_LABEL[] = {
     "mem",
     "net",
     "swap",
+    "gpu0",
+    "gpu1",
 };
 
 static const gchar *const DEFAULT_COLOR[] = {
@@ -56,6 +58,8 @@ static const gchar *const DEFAULT_COLOR[] = {
     "#2ec27e", /* MEM */
     "#e66100", /* NET */
     "#f5c211", /* SWAP */
+    "#a51d2d", /* GPU0 */
+    "#613583", /* GPU1 */
 };
 
 
@@ -93,7 +97,7 @@ struct _SystemloadConfig {
     bool           use_label;
     gchar         *label;
     GdkRGBA        color;
-  } monitor[4];
+  } monitor[6];
 };
 
 enum SystemloadProperty {
@@ -119,6 +123,14 @@ enum SystemloadProperty {
     PROP_SWAP_USE_LABEL,
     PROP_SWAP_LABEL,
     PROP_SWAP_COLOR,
+    PROP_GPU0_ENABLED,
+    PROP_GPU0_USE_LABEL,
+    PROP_GPU0_LABEL,
+    PROP_GPU0_COLOR,
+    PROP_GPU1_ENABLED,
+    PROP_GPU1_USE_LABEL,
+    PROP_GPU1_LABEL,
+    PROP_GPU1_COLOR,
     N_PROPERTIES,
 };
 
@@ -154,6 +166,16 @@ prop2monitor (SystemloadProperty p)
     case PROP_SWAP_LABEL:
     case PROP_SWAP_COLOR:
       return SWAP_MONITOR;
+    case PROP_GPU0_ENABLED:
+    case PROP_GPU0_USE_LABEL:
+    case PROP_GPU0_LABEL:
+    case PROP_GPU0_COLOR:
+      return GPU0_MONITOR;
+    case PROP_GPU1_ENABLED:
+    case PROP_GPU1_USE_LABEL:
+    case PROP_GPU1_LABEL:
+    case PROP_GPU1_COLOR:
+      return GPU1_MONITOR;
     default:
       /* Ideally, this codepath is never reached */
       return CPU_MONITOR;
@@ -341,6 +363,56 @@ systemload_config_class_init (SystemloadConfigClass *klass)
                                                        GDK_TYPE_RGBA,
                                                        GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
 
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU0_ENABLED,
+                                   g_param_spec_boolean ("gpu0-enabled", NULL, NULL,
+                                                         FALSE,
+                                                         GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU0_USE_LABEL,
+                                   g_param_spec_boolean ("gpu0-use-label", NULL, NULL,
+                                                         TRUE,
+                                                         GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU0_LABEL,
+                                   g_param_spec_string ("gpu0-label", NULL, NULL,
+                                                        DEFAULT_LABEL[GPU0_MONITOR],
+                                                        GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU0_COLOR,
+                                   g_param_spec_boxed ("gpu0-color",
+                                                       NULL, NULL,
+                                                       GDK_TYPE_RGBA,
+                                                       GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU1_ENABLED,
+                                   g_param_spec_boolean ("gpu1-enabled", NULL, NULL,
+                                                         FALSE,
+                                                         GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU1_USE_LABEL,
+                                   g_param_spec_boolean ("gpu1-use-label", NULL, NULL,
+                                                         TRUE,
+                                                         GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU1_LABEL,
+                                   g_param_spec_string ("gpu1-label", NULL, NULL,
+                                                        DEFAULT_LABEL[GPU1_MONITOR],
+                                                        GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
+  g_object_class_install_property (gobject_class,
+                                   PROP_GPU1_COLOR,
+                                   g_param_spec_boxed ("gpu1-color",
+                                                       NULL, NULL,
+                                                       GDK_TYPE_RGBA,
+                                                       GParamFlags (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS)));
+
   systemload_config_signals[CONFIGURATION_CHANGED] =
     g_signal_new (g_intern_string ("configuration-changed"),
                   G_TYPE_FROM_CLASS (gobject_class),
@@ -362,7 +434,8 @@ systemload_config_init (SystemloadConfig *config)
   config->uptime_label = g_strdup (DEFAULT_UPTIME_LABEL);
   for (gsize i = 0; i < G_N_ELEMENTS (config->monitor); i++)
     {
-      config->monitor[i].enabled = true;
+      /* GPU monitors are disabled by default, others enabled */
+      config->monitor[i].enabled = (i < GPU0_MONITOR);
       config->monitor[i].use_label = true;
       config->monitor[i].label = g_strdup (DEFAULT_LABEL[i]);
       gdk_rgba_parse (&config->monitor[i].color, DEFAULT_COLOR[i]);
@@ -423,6 +496,8 @@ systemload_config_get_property (GObject    *object,
     case PROP_MEMORY_ENABLED:
     case PROP_NETWORK_ENABLED:
     case PROP_SWAP_ENABLED:
+    case PROP_GPU0_ENABLED:
+    case PROP_GPU1_ENABLED:
       g_value_set_boolean (value, config->monitor[prop2monitor(prop_id)].enabled);
       break;
 
@@ -430,6 +505,8 @@ systemload_config_get_property (GObject    *object,
     case PROP_MEMORY_USE_LABEL:
     case PROP_NETWORK_USE_LABEL:
     case PROP_SWAP_USE_LABEL:
+    case PROP_GPU0_USE_LABEL:
+    case PROP_GPU1_USE_LABEL:
       g_value_set_boolean (value, config->monitor[prop2monitor(prop_id)].use_label);
       break;
 
@@ -437,6 +514,8 @@ systemload_config_get_property (GObject    *object,
     case PROP_MEMORY_LABEL:
     case PROP_NETWORK_LABEL:
     case PROP_SWAP_LABEL:
+    case PROP_GPU0_LABEL:
+    case PROP_GPU1_LABEL:
       g_value_set_string (value, config->monitor[prop2monitor(prop_id)].label);
       break;
 
@@ -444,6 +523,8 @@ systemload_config_get_property (GObject    *object,
     case PROP_MEMORY_COLOR:
     case PROP_NETWORK_COLOR:
     case PROP_SWAP_COLOR:
+    case PROP_GPU0_COLOR:
+    case PROP_GPU1_COLOR:
       g_value_set_boxed (value, &config->monitor[prop2monitor(prop_id)].color);
       break;
 
@@ -713,6 +794,90 @@ systemload_config_set_property (GObject      *object,
       g_boxed_free (GDK_TYPE_RGBA, val_rgba);
       break;
 
+    case PROP_GPU0_ENABLED:
+      val_bool = g_value_get_boolean (value);
+      if (config->monitor[GPU0_MONITOR].enabled != val_bool)
+        {
+          config->monitor[GPU0_MONITOR].enabled = val_bool;
+          g_object_notify (G_OBJECT (config), "gpu0-enabled");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      break;
+
+    case PROP_GPU0_USE_LABEL:
+      val_bool = g_value_get_boolean (value);
+      if (config->monitor[GPU0_MONITOR].use_label != val_bool)
+        {
+          config->monitor[GPU0_MONITOR].use_label = val_bool;
+          g_object_notify (G_OBJECT (config), "gpu0-use-label");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      break;
+
+    case PROP_GPU0_LABEL:
+      val_string = g_value_get_string (value);
+      if (g_strcmp0 (config->monitor[GPU0_MONITOR].label, val_string) != 0)
+        {
+          g_free (config->monitor[GPU0_MONITOR].label);
+          config->monitor[GPU0_MONITOR].label = g_value_dup_string (value);
+          g_object_notify (G_OBJECT (config), "gpu0-label");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      break;
+
+    case PROP_GPU0_COLOR:
+      val_rgba = (GdkRGBA*) g_value_dup_boxed (value);
+      if (!rgba_equal (config->monitor[GPU0_MONITOR].color, *val_rgba))
+        {
+          config->monitor[GPU0_MONITOR].color = *val_rgba;
+          g_object_notify (G_OBJECT (config), "gpu0-color");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      g_boxed_free (GDK_TYPE_RGBA, val_rgba);
+      break;
+
+    case PROP_GPU1_ENABLED:
+      val_bool = g_value_get_boolean (value);
+      if (config->monitor[GPU1_MONITOR].enabled != val_bool)
+        {
+          config->monitor[GPU1_MONITOR].enabled = val_bool;
+          g_object_notify (G_OBJECT (config), "gpu1-enabled");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      break;
+
+    case PROP_GPU1_USE_LABEL:
+      val_bool = g_value_get_boolean (value);
+      if (config->monitor[GPU1_MONITOR].use_label != val_bool)
+        {
+          config->monitor[GPU1_MONITOR].use_label = val_bool;
+          g_object_notify (G_OBJECT (config), "gpu1-use-label");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      break;
+
+    case PROP_GPU1_LABEL:
+      val_string = g_value_get_string (value);
+      if (g_strcmp0 (config->monitor[GPU1_MONITOR].label, val_string) != 0)
+        {
+          g_free (config->monitor[GPU1_MONITOR].label);
+          config->monitor[GPU1_MONITOR].label = g_value_dup_string (value);
+          g_object_notify (G_OBJECT (config), "gpu1-label");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      break;
+
+    case PROP_GPU1_COLOR:
+      val_rgba = (GdkRGBA*) g_value_dup_boxed (value);
+      if (!rgba_equal (config->monitor[GPU1_MONITOR].color, *val_rgba))
+        {
+          config->monitor[GPU1_MONITOR].color = *val_rgba;
+          g_object_notify (G_OBJECT (config), "gpu1-color");
+          g_signal_emit (G_OBJECT (config), systemload_config_signals [CONFIGURATION_CHANGED], 0);
+        }
+      g_boxed_free (GDK_TYPE_RGBA, val_rgba);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -902,6 +1067,38 @@ systemload_config_new (const gchar *property_base)
 
       property = g_strconcat (property_base, "/swap/color", NULL);
       xfconf_g_property_bind_gdkrgba (channel, property, config, "swap-color");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu0/enabled", NULL);
+      xfconf_g_property_bind (channel, property, G_TYPE_BOOLEAN, config, "gpu0-enabled");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu0/use-label", NULL);
+      xfconf_g_property_bind (channel, property, G_TYPE_BOOLEAN, config, "gpu0-use-label");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu0/label", NULL);
+      xfconf_g_property_bind (channel, property, G_TYPE_STRING, config, "gpu0-label");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu0/color", NULL);
+      xfconf_g_property_bind_gdkrgba (channel, property, config, "gpu0-color");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu1/enabled", NULL);
+      xfconf_g_property_bind (channel, property, G_TYPE_BOOLEAN, config, "gpu1-enabled");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu1/use-label", NULL);
+      xfconf_g_property_bind (channel, property, G_TYPE_BOOLEAN, config, "gpu1-use-label");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu1/label", NULL);
+      xfconf_g_property_bind (channel, property, G_TYPE_STRING, config, "gpu1-label");
+      g_free (property);
+
+      property = g_strconcat (property_base, "/gpu1/color", NULL);
+      xfconf_g_property_bind_gdkrgba (channel, property, config, "gpu1-color");
       g_free (property);
     }
 

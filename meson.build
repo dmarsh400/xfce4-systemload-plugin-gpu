@@ -22,7 +22,7 @@ dependency_versions = {
   'glib': '>= 2.50.0',
   'gtk': '>= 3.22.0',
   'xfce4': '>= 4.16.0',
-  'libxfce4util': '>= 4.17.2',
+  'libxfce4util': '>= 4.16.0',
   'libgtop': '>= 2.32.0',
   'upower-glib': '>= 0.99.0',
 }
