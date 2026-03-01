@@ -10,7 +10,7 @@
 gulong read_gpu0load()
 {
     /* Use the known working path for rocm-smi */
-    const char *command = "/opt/rocm-6.0.0/bin/rocm-smi --showuse 2>/dev/null";
+    const char *command = "/opt/rocm/bin/rocm-smi --showuse 2>/dev/null";
     
     FILE *fp = popen(command, "r");
     if (!fp) {
@@ -37,7 +37,7 @@ gulong read_gpu0load()
 gulong read_gpu1load()
 {
     /* Use the known working path for rocm-smi */
-    const char *command = "/opt/rocm-6.0.0/bin/rocm-smi --showuse 2>/dev/null";
+    const char *command = "/opt/rocm/bin/rocm-smi --showuse 2>/dev/null";
     
     FILE *fp = popen(command, "r");
     if (!fp) {
@@ -64,7 +64,7 @@ gulong read_gpu1load()
 gulong read_vram0usage()
 {
     /* Use the known working path for rocm-smi */
-    const char *command = "/opt/rocm-6.0.0/bin/rocm-smi --showmeminfo vram 2>/dev/null";
+    const char *command = "/opt/rocm/bin/rocm-smi --showmeminfo vram 2>/dev/null";
     
     FILE *fp = popen(command, "r");
     if (!fp) {
@@ -111,7 +111,7 @@ gulong read_vram0usage()
 gulong read_vram1usage()
 {
     /* Use the known working path for rocm-smi */
-    const char *command = "/opt/rocm-6.0.0/bin/rocm-smi --showmeminfo vram 2>/dev/null";
+    const char *command = "/opt/rocm/bin/rocm-smi --showmeminfo vram 2>/dev/null";
     
     FILE *fp = popen(command, "r");
     if (!fp) {
