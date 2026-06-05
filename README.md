@@ -37,16 +37,34 @@ From source:
 
     % sudo apt install meson ninja-build build-essential libxfce4panel-2.0-dev
     % cd xfce4-systemload-plugin-gpu
-    % meson setup build
+    % meson setup build --wipe --prefix=/usr
     % meson compile -C build
     % sudo meson install -C build
+    % xfce4-panel -r
+
+This fork installs as a separate XFCE panel module (`systemload-gpu`) so it can coexist with the distro `xfce4-systemload-plugin` package.
 
 ## Usage
 
-1. Add the "System Load Monitor" plugin to your Xfce panel
+1. Add the "System Load Monitor (GPU)" plugin to your Xfce panel
 2. Right-click the plugin → Properties to configure which monitors to display
 3. Enable GPU0/GPU1 and VRAM0/VRAM1 monitoring as desired
 4. Customize colors and labels for each monitor type
+
+## Troubleshooting
+
+- If Meson reports stale build metadata after an OS upgrade:
+
+    % meson setup build --wipe --prefix=/usr
+
+- If Meson cannot find Ninja, verify the executable in your PATH:
+
+    % which ninja
+    % ninja --version
+
+- If panel options still look like the stock plugin, restart the panel and re-add this plugin:
+
+    % xfce4-panel -r
 
 ## Configuration
 

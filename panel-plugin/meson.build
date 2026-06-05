@@ -18,9 +18,10 @@ plugin_sources = [
 ]
 
 plugin_install_subdir = 'xfce4' / 'panel' / 'plugins'
+plugin_module_name = 'systemload-gpu'
 
 plugin_lib = shared_module(
-  'systemload',
+  plugin_module_name,
   plugin_sources,
   gnu_symbol_visibility: 'hidden',
   c_args: [
@@ -47,7 +48,7 @@ plugin_lib = shared_module(
 
 i18n.merge_file(
   input: 'systemload.desktop.in',
-  output: 'systemload.desktop',
+  output: '@0@.desktop'.format(plugin_module_name),
   po_dir: '..' / 'po',
   type: 'desktop',
   install: true,
